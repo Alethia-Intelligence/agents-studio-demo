@@ -38,10 +38,22 @@ type TabValue = (typeof TABS)[number]["value"];
 export default function StudioPlayground() {
   const [mounted, setMounted] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState<TabValue>("agents");
+  const [userEmail, setUserEmail] = React.useState<string | null>(null);
 
-  // Hydration guard — prevents SSR/client mismatch with Radix
+  // Hydration guard + fetch auth status
   React.useEffect(() => {
     setMounted(true);
+    fetch("/auth/status")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.authenticated && data.user?.email) {
+          setUserEmail(data.user.email);
+        }
+        if (data.needsRefresh) {
+          fetch("/auth/refresh", { method: "POST" }).catch(() => {});
+        }
+      })
+      .catch(() => {});
   }, []);
 
   if (!mounted) return null;
@@ -73,7 +85,7 @@ export default function StudioPlayground() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
               <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Andrei.Pop@alethiaintel.com</span>
+              <span className="hidden sm:inline">{userEmail ?? "..."}</span>
             </div>
             <Button variant="ghost" size="sm" onClick={() => window.location.reload()}>
               <RefreshCw className="h-4 w-4" />

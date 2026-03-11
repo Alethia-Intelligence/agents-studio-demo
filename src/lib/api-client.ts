@@ -119,6 +119,10 @@ export async function updateTool(name: string, tool: Partial<ToolDefinition>): P
   });
 }
 
+export async function deleteTool(name: string): Promise<void> {
+  return request<void>(`/tools/${name}`, { method: "DELETE" });
+}
+
 export async function invokeTool(name: string, args: Record<string, unknown>): Promise<ToolInvocationResult> {
   return request<ToolInvocationResult>(`/tools/${name}/invoke`, {
     method: "POST",

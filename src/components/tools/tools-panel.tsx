@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   XCircle,
   Pencil,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +29,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { cn, formatDuration } from "@/lib/utils";
-import { listTools, invokeTool, createTool, updateTool } from "@/lib/api-client";
+import { listTools, invokeTool, createTool, updateTool, deleteTool } from "@/lib/api-client";
 import type { ToolDefinition, ToolInvocationResult } from "@/types/api";
 
 // ---------- helpers ----------
@@ -72,12 +73,14 @@ function ToolCard({
   onActivate,
   onDeactivate,
   onEdit,
+  onDelete,
 }: {
   tool: ToolDefinition;
   active: boolean;
   onActivate: () => void;
   onDeactivate: () => void;
   onEdit: () => void;
+  onDelete: () => void;
 }) {
   const [invocation, setInvocation] = useState<InvocationState>({
     args: "{}",
@@ -147,7 +150,7 @@ function ToolCard({
         </div>
 
         {/* Actions */}
-        <div className="mt-auto flex gap-2">
+        <div className="mt-auto flex items-center gap-1 pt-2 border-t border-border">
           <Button variant="ghost" size="sm" onClick={onEdit} className="h-8 w-8 p-0" aria-label={`Edit ${tool.name}`}>
             <Pencil className="size-3.5" />
           </Button>
@@ -167,6 +170,15 @@ function ToolCard({
               Close
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 ml-auto text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+            onClick={onDelete}
+            aria-label={`Delete ${tool.name}`}
+          >
+            <Trash2 className="size-3.5" />
+          </Button>
         </div>
 
         {/* Inline invocation form */}
@@ -302,6 +314,16 @@ export function ToolsPanel() {
       console.error(err);
     } finally {
       setCreating(false);
+    }
+  }
+
+  async function handleDelete(tool: ToolDefinition) {
+    if (!window.confirm(`Delete tool "${tool.name}"? This cannot be undone.`)) return;
+    try {
+      await deleteTool(tool.name);
+      setTools((prev) => prev.filter((t) => t.name !== tool.name));
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -546,6 +568,7 @@ export function ToolsPanel() {
               onActivate={() => setActiveToolName(tool.name)}
               onDeactivate={() => setActiveToolName(null)}
               onEdit={() => handleEdit(tool)}
+              onDelete={() => handleDelete(tool)}
             />
           ))}
         </div>
