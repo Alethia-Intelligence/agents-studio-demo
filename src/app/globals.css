@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+/**
+ * Alethia Design System - Typography
+ * Primary font: Satoshi from Fontshare
+ * Monospace font: IBM Plex Mono from Google Fonts
+ */
+
+/* Satoshi Light - 300 */
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("https://cdn.fontshare.com/wf/D7WD5OXZFWQ5T76HSPWAC7MNKAJXE2YG/LUGNSPO5YC34ABNB2O6K7AFDSOJZT56V/WNDVG7O66ENLOD43GS7FBUCC4KMT5OM2.woff2")
+      format("woff2"),
+    url("https://cdn.fontshare.com/wf/D7WD5OXZFWQ5T76HSPWAC7MNKAJXE2YG/LUGNSPO5YC34ABNB2O6K7AFDSOJZT56V/WNDVG7O66ENLOD43GS7FBUCC4KMT5OM2.woff")
+      format("woff");
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Satoshi Regular - 400 */
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("https://cdn.fontshare.com/wf/TTX2Z3BF3P6Y5BQT3IV2VNOK6FL22KUT/7QYRJOI3JIMYHGY6CH7SOIFRQLZOLNJ6/KFIAZD4RUMEZIYV6FQ3T3GP5PDBDB6JY.woff2")
+      format("woff2"),
+    url("https://cdn.fontshare.com/wf/TTX2Z3BF3P6Y5BQT3IV2VNOK6FL22KUT/7QYRJOI3JIMYHGY6CH7SOIFRQLZOLNJ6/KFIAZD4RUMEZIYV6FQ3T3GP5PDBDB6JY.woff")
+      format("woff");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Satoshi Medium - 500 */
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("https://cdn.fontshare.com/wf/P2LQKHE6KA6ZP4AAGN72KDWMHH6ZH3TA/ZC32TK2P7FPS5GFTL46EU6KQJA24ZYDB/7AHDUZ4A7LFLVFUIFSARGIWCRQJHISQP.woff2")
+      format("woff2"),
+    url("https://cdn.fontshare.com/wf/P2LQKHE6KA6ZP4AAGN72KDWMHH6ZH3TA/ZC32TK2P7FPS5GFTL46EU6KQJA24ZYDB/7AHDUZ4A7LFLVFUIFSARGIWCRQJHISQP.woff")
+      format("woff");
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Satoshi Bold - 700 */
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("https://cdn.fontshare.com/wf/LAFFD4SDUCDVQEXFPDC7C53EQ4ZELWQI/PXCT3G6LO6ICM5I3NTYENYPWJAECAWDD/GHM6WVH6MILNYOOCXHXB5GTSGNTMGXZR.woff2")
+      format("woff2"),
+    url("https://cdn.fontshare.com/wf/LAFFD4SDUCDVQEXFPDC7C53EQ4ZELWQI/PXCT3G6LO6ICM5I3NTYENYPWJAECAWDD/GHM6WVH6MILNYOOCXHXB5GTSGNTMGXZR.woff")
+      format("woff");
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Satoshi Black - 900 */
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("https://cdn.fontshare.com/wf/NHPGVFYUXYXE33DZ75OIT4JFGHITX5PE/PSUTMASCDJTVPERDYJZPN23BVUFUCQIF/J64QX5IPOHK56I2KYUNBQ5M2XWZEYKYX.woff2")
+      format("woff2"),
+    url("https://cdn.fontshare.com/wf/NHPGVFYUXYXE33DZ75OIT4JFGHITX5PE/PSUTMASCDJTVPERDYJZPN23BVUFUCQIF/J64QX5IPOHK56I2KYUNBQ5M2XWZEYKYX.woff")
+      format("woff");
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+/**
+ * Alethia Design System - Design Tokens
+ * All colors use HSL format for Tailwind CSS compatibility.
+ */
+:root {
+  /* Brand Colors (HSL) */
+  --ale-blue: 205 90% 48%; /* #0C8CE9 - Ion Blue - Primary CTA, links, active states */
+  --ale-lightblue: 203 82% 79%; /* #9ED1F6 - Light Blue - Hover states, code highlights */
+  --ale-quartz: 212 100% 96%; /* #E9F3FF - Quartz White - Light backgrounds, soft surfaces */
+  --ale-indigo: 244 100% 69%; /* #6A63FF - Electric Indigo - AI/Intelligent features */
+  --ale-magenta: 281 100% 62%; /* #C23BFF - Magenta Signal - Creative moments, visionary features */
+  --ale-yellow: 40 100% 50%; /* #FFAC00 - Amber Arc - Warnings, energy markers */
+  --ale-orange: 18 97% 53%; /* #FC4E12 - Ember - Actions, urgency, trust indicators */
+
+  /* Neutral Colors (HSL) */
+  --ale-black: 225 17% 11%; /* #17191F - Deep Graphite - Dark mode backgrounds */
+  --ale-slate: 220 15% 16%; /* #22272E - Dark Slate - Dark mode cards, elevated surfaces */
+  --ale-deepgrey: 200 6% 26%; /* #3E4447 - Shadow Grey - Dark mode borders, muted elements */
+  --ale-midgrey: 198 5% 41%; /* #646B6E - Mid Grey - Muted text, placeholders */
+  --ale-lightgrey: 200 2% 70%; /* #B2B4B5 - Light Grey - Dark mode secondary text */
+  --ale-silver: 0 0% 90%; /* #E6E6E6 - Silver - Light mode borders */
+  --ale-offwhite: 0 0% 93%; /* #EDEDED - Off White - Dark mode foreground text */
+  --ale-white: 0 0% 100%; /* #FFFFFF - Pure White - Highlights, light mode cards */
+
+  /* Semantic Tokens - Light Mode */
+  --background: 0 0% 97%; /* #F7F7F7 - Main page background */
+  --foreground: var(--ale-black);
+  --card: var(--ale-white);
+  --card-foreground: var(--ale-black);
+  --popover: var(--ale-white);
+  --popover-foreground: var(--ale-black);
+  --primary: var(--ale-blue);
+  --primary-foreground: var(--ale-white);
+  --secondary: var(--ale-lightblue);
+  --secondary-foreground: var(--ale-black);
+  --muted: var(--ale-quartz);
+  --muted-foreground: var(--ale-midgrey);
+  --accent: var(--ale-lightblue);
+  --accent-foreground: var(--ale-black);
+  --destructive: 0 84% 60%; /* #F53131 - Error/delete actions */
+  --destructive-foreground: var(--ale-white);
+  --warning: var(--ale-yellow);
+  --warning-foreground: var(--ale-black);
+  --success: 142 76% 36%; /* #16A34A - Success states */
+  --success-foreground: var(--ale-white);
+  --border: var(--ale-silver);
+  --input: var(--ale-silver);
+  --ring: var(--ale-blue);
+
+  /* Layout Tokens */
+  --radius: 1rem; /* 16px - Default border radius */
+
+  /* Motion & Animation - Apple-like easing curves */
+  --motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-standard: 280ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+
+  /* Gradients */
+  --grad-core: linear-gradient(135deg, hsl(var(--ale-blue)), hsl(var(--ale-indigo)));
+  --grad-signal: linear-gradient(135deg, hsl(var(--ale-indigo)), hsl(var(--ale-magenta)));
+  --grad-orbit: linear-gradient(135deg, hsl(var(--ale-yellow)), hsl(var(--ale-orange)));
+  --grad-perception: linear-gradient(135deg, hsl(var(--ale-blue)), hsl(var(--ale-magenta)));
+}
+
+/* Dark Mode Overrides */
+.dark {
+  --background: var(--ale-black);
+  --foreground: var(--ale-offwhite);
+  --card: var(--ale-slate);
+  --card-foreground: var(--ale-offwhite);
+  --popover: var(--ale-slate);
+  --popover-foreground: var(--ale-offwhite);
+  --primary: var(--ale-blue);
+  --primary-foreground: var(--ale-white);
+  --secondary: var(--ale-deepgrey);
+  --secondary-foreground: var(--ale-offwhite);
+  --muted: var(--ale-deepgrey);
+  --muted-foreground: var(--ale-lightgrey);
+  --accent: var(--ale-deepgrey);
+  --accent-foreground: var(--ale-offwhite);
+  --destructive: 0 84% 60%;
+  --destructive-foreground: var(--ale-white);
+  --border: var(--ale-deepgrey);
+  --input: var(--ale-deepgrey);
+  --ring: var(--ale-blue);
+}
+
+/* Tailwind theme customization */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Brand colors */
+  --color-ale-blue: hsl(var(--ale-blue));
+  --color-ale-lightblue: hsl(var(--ale-lightblue));
+  --color-ale-quartz: hsl(var(--ale-quartz));
+  --color-ale-indigo: hsl(var(--ale-indigo));
+  --color-ale-magenta: hsl(var(--ale-magenta));
+  --color-ale-yellow: hsl(var(--ale-yellow));
+  --color-ale-orange: hsl(var(--ale-orange));
+  --color-ale-black: hsl(var(--ale-black));
+  --color-ale-slate: hsl(var(--ale-slate));
+  --color-ale-deepgrey: hsl(var(--ale-deepgrey));
+  --color-ale-midgrey: hsl(var(--ale-midgrey));
+  --color-ale-lightgrey: hsl(var(--ale-lightgrey));
+  --color-ale-silver: hsl(var(--ale-silver));
+  --color-ale-offwhite: hsl(var(--ale-offwhite));
+
+  /* Font family */
+  --font-sans: "Satoshi", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Border radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--ale-midgrey) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--ale-midgrey) / 0.5);
+}
+
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.2); }
+  50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.4); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s var(--motion-ease-enter);
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s var(--motion-ease-enter);
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s var(--motion-ease-enter);
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Gradient text utility */
+.text-gradient-core {
+  background: var(--grad-core);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-signal {
+  background: var(--grad-signal);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shadow utilities */
+.shadow-glow-blue {
+  box-shadow: 0 0 30px hsl(var(--ale-blue) / 0.3);
+}
+
+.shadow-elegant {
+  box-shadow: 0 10px 30px -10px hsl(var(--foreground) / 0.15);
+}
