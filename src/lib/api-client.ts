@@ -11,7 +11,9 @@ import type {
   ApprovalRequest,
   AgentStats,
   AgentUsage,
+  MCPServerConfig,
   MCPServerInfo,
+  MCPToolInvokeResult,
   AgentVersion,
 } from "@/types/api";
 
@@ -24,7 +26,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`${res.status}: ${text}`);
+    // Truncate long HTML error pages from proxy failures
+    const msg = text.length > 200 ? text.slice(0, 200) + "..." : text;
+    throw new Error(`${res.status}: ${msg}`);
   }
   if (res.status === 204) return undefined as T;
   return res.json();
@@ -154,6 +158,24 @@ export async function getTemplate(id: string): Promise<AgentTemplate> {
   return request<AgentTemplate>(`/agents/templates/${id}`);
 }
 
+export async function createTemplate(template: Partial<AgentTemplate>): Promise<AgentTemplate> {
+  return request<AgentTemplate>("/agents/templates", {
+    method: "POST",
+    body: JSON.stringify(template),
+  });
+}
+
+export async function updateTemplate(id: string, template: Partial<AgentTemplate>): Promise<AgentTemplate> {
+  return request<AgentTemplate>(`/agents/templates/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(template),
+  });
+}
+
+export async function deleteTemplate(id: string): Promise<void> {
+  return request<void>(`/agents/templates/${id}`, { method: "DELETE" });
+}
+
 export async function createFromTemplate(templateId: string, overrides?: Record<string, unknown>): Promise<AgentInfo> {
   return request<AgentInfo>("/agents/from-template", {
     method: "POST",
@@ -181,10 +203,69 @@ export async function rejectRequest(id: string, reason?: string): Promise<Approv
   });
 }
 
-// MCP
+// MCP Configs (CRUD)
+export async function listMCPConfigs(): Promise<MCPServerConfig[]> {
+  const data = await request<{ servers: MCPServerConfig[] }>("/mcp/configs");
+  return data.servers ?? [];
+}
+
+export async function getMCPConfig(id: string): Promise<MCPServerConfig> {
+  return request<MCPServerConfig>(`/mcp/configs/${id}`);
+}
+
+export async function createMCPConfig(config: Partial<MCPServerConfig>): Promise<MCPServerConfig> {
+  return request<MCPServerConfig>("/mcp/configs", {
+    method: "POST",
+    body: JSON.stringify(config),
+  });
+}
+
+export async function updateMCPConfig(id: string, config: Partial<MCPServerConfig>): Promise<MCPServerConfig> {
+  return request<MCPServerConfig>(`/mcp/configs/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(config),
+  });
+}
+
+export async function deleteMCPConfig(id: string): Promise<void> {
+  return request<void>(`/mcp/configs/${id}`, { method: "DELETE" });
+}
+
+// MCP Runtime (server lifecycle)
 export async function listMCPServers(): Promise<MCPServerInfo[]> {
   const data = await request<{ servers: MCPServerInfo[] }>("/mcp/servers");
   return data.servers ?? [];
+}
+
+export async function getMCPServer(serverId: string): Promise<MCPServerInfo> {
+  return request<MCPServerInfo>(`/mcp/servers/${serverId}`);
+}
+
+export async function startMCPServer(serverId: string, namespace?: string, taskQueue?: string): Promise<void> {
+  return request<void>("/mcp/servers", {
+    method: "POST",
+    body: JSON.stringify({ serverId, namespace, taskQueue }),
+  });
+}
+
+export async function stopMCPServer(serverId: string): Promise<void> {
+  return request<void>(`/mcp/servers/${serverId}/stop`, { method: "POST" });
+}
+
+export async function restartMCPServer(serverId: string): Promise<void> {
+  return request<void>(`/mcp/servers/${serverId}/restart`, { method: "POST" });
+}
+
+export async function listMCPServerTools(serverId: string): Promise<{ name: string; description: string }[]> {
+  const data = await request<{ tools: { name: string; description: string }[] }>(`/mcp/servers/${serverId}/tools`);
+  return data.tools ?? [];
+}
+
+export async function invokeMCPTool(serverId: string, toolName: string, parameters: Record<string, unknown>): Promise<MCPToolInvokeResult> {
+  return request<MCPToolInvokeResult>(`/mcp/servers/${serverId}/invoke`, {
+    method: "POST",
+    body: JSON.stringify({ toolName, parameters }),
+  });
 }
 
 // Health

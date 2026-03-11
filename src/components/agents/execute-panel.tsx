@@ -5,7 +5,7 @@
 // <ExecutePanel />
 
 import { useState, useEffect } from "react";
-import { Play, Loader2, ChevronDown, ChevronUp, Zap, Route } from "lucide-react";
+import { Play, Loader2, ChevronDown, ChevronUp, Zap, Route, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -85,6 +85,7 @@ export function ExecutePanel() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<ExecuteResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [stepsExpanded, setStepsExpanded] = useState(false);
 
   useEffect(() => {
@@ -97,6 +98,7 @@ export function ExecutePanel() {
     if (!query.trim() || loading) return;
     setLoading(true);
     setResponse(null);
+    setError(null);
     try {
       const result = await executeAgent({
         query: query.trim(),
@@ -106,7 +108,7 @@ export function ExecutePanel() {
       });
       setResponse(result);
     } catch (err) {
-      console.error(err);
+      setError(err instanceof Error ? err.message : "Execution failed");
     } finally {
       setLoading(false);
     }
@@ -256,6 +258,22 @@ export function ExecutePanel() {
               <Loader2 className="size-6 animate-spin" />
               <p className="text-sm">Running inference...</p>
             </div>
+          </div>
+        )}
+
+        {error && (
+          <div
+            role="alert"
+            className="flex items-center justify-between gap-3 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          >
+            <span className="break-all">{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="shrink-0 text-destructive/70 hover:text-destructive transition-colors"
+              aria-label="Dismiss error"
+            >
+              <X className="size-4" />
+            </button>
           </div>
         )}
 

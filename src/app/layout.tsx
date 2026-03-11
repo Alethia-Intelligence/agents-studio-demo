@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Agents Studio",
-  description: "Interactive playground for Temporal EffGen agent orchestration",
+  description: "Interactive playground for Agent Studio orchestration",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

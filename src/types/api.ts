@@ -1,53 +1,69 @@
+// Model settings — shared by AgentConfiguration and AgentTemplate
+export interface ModelSettings {
+  model: string;
+  provider?: string;
+  routingStrategy?: string;
+  routingEngine?: string;
+  preferredTier?: string;
+  requiredCapabilities?: string[];
+  maxCostPerRequest?: number;
+  fallbackEnabled?: boolean;
+}
+
 // Agent types
 export interface AgentInfo {
   id: string;
   name: string;
   description: string;
   temporal: { namespace: string; taskQueue: string };
-  model: { path: string; size: string };
+  model: ModelSettings;
   status: "draft" | "published" | "archived" | "ready";
   version: number;
   autonomyLevel: string;
   tools?: { enabled: string[] };
-  routing?: { keywords: string[]; examples?: string[] };
-  routingStrategy?: string;
+  routing?: { keywords?: string[]; examples?: string[]; threshold?: number };
   permissions?: AgentPermissions;
   maxIterations?: number;
   maxTokensPerRun?: number;
   timeoutSeconds?: number;
-  deletedAt?: string;
+  deletedAt?: string | null;
 }
 
 export interface AgentPermissions {
   canCreateEntities: boolean;
   canUpdateEntities: boolean;
   canDeleteEntities: boolean;
+  canCreateRelationships: boolean;
   canRunWorkflows: boolean;
+  canAccessFiles: boolean;
+  canExecuteCode: boolean;
 }
 
 export interface AgentConfiguration {
   id: string;
   name: string;
-  description: string;
-  temporal: { namespace: string; taskQueue: string; cluster?: string };
-  model: { path: string; size: string };
+  description?: string;
+  temporal: { namespace: string; taskQueue: string };
+  model: ModelSettings;
+  maxTokens?: number;
+  temperature?: number;
   tools: { enabled: string[] };
-  routing?: { keywords: string[]; examples?: string[] };
-  routingStrategy?: string;
+  routing?: { keywords?: string[]; examples?: string[]; threshold?: number };
+  version?: number;
+  status?: string;
+  deletedAt?: string | null;
   autonomyLevel?: string;
   permissions?: AgentPermissions;
   maxIterations?: number;
   maxTokensPerRun?: number;
   timeoutSeconds?: number;
-  status?: string;
-  version?: number;
 }
 
 // Execution types
 export interface ExecuteRequest {
   query: string;
   agentId?: string;
-  modelPath?: string;
+  model?: string;
   mode?: "standard" | "agentic";
   maxIterations?: number;
   maxTokensPerRun?: number;
@@ -143,20 +159,25 @@ export interface ToolInvocationResult {
   error?: string;
 }
 
-// Template types
+// Template types — mirrors AgentConfiguration so templates map 1:1 to agents
 export interface AgentTemplate {
   id: string;
   name: string;
   description: string;
+  // Agent configuration fields (1:1 with AgentConfiguration)
+  temporal: { namespace: string; taskQueue: string };
+  model: ModelSettings;
+  tools: { enabled: string[] };
+  routing?: { keywords?: string[]; examples?: string[]; threshold?: number };
+  autonomyLevel?: string;
+  permissions?: AgentPermissions;
+  maxIterations?: number;
+  maxTokensPerRun?: number;
+  timeoutSeconds?: number;
+  systemPrompt?: string;
+  // Template-specific metadata
   category: string;
   complexity: string;
-  autonomyLevel: string;
-  systemPrompt?: string;
-  tools: string[];
-  permissions?: AgentPermissions;
-  model: { path: string; size: string };
-  maxIterations: number;
-  routing?: { keywords: string[] };
   tags?: string[];
 }
 
@@ -201,6 +222,21 @@ export interface AgentUsage {
 }
 
 // MCP types
+export interface MCPServerConfig {
+  id: string;
+  name: string;
+  description: string;
+  transport: "stdio" | "sse";
+  command: string;
+  args: string[];
+  env: Record<string, string>;
+  baseURL: string;
+  temporal: { namespace: string; taskQueue: string; cluster: string };
+  routing: { keywords: string[] };
+  autoRestart: boolean;
+  maxRestarts: number;
+}
+
 export interface MCPServerInfo {
   serverId: string;
   name: string;
@@ -209,6 +245,12 @@ export interface MCPServerInfo {
   restartCount: number;
   tools: { name: string; description: string }[];
   workflowId?: string;
+}
+
+export interface MCPToolInvokeResult {
+  toolName: string;
+  result: unknown;
+  error?: string;
 }
 
 // Version types
