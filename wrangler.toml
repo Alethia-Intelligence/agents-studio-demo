@@ -1,0 +1,24 @@
+name = "agents-studio-demo"
+compatibility_date = "2024-12-30"
+compatibility_flags = ["nodejs_compat_v2"]
+main = ".open-next/worker.js"
+
+[[routes]]
+pattern = "agents-studio.alethiaintel.com"
+custom_domain = true
+
+[assets]
+directory = ".open-next/assets"
+
+# Secrets are set via: wrangler secret put SECRET_NAME
+# Required secrets:
+#   SESSION_SECRET         - Generate with: openssl rand -base64 64
+#   COGNITO_CLIENT_ID      - From Cognito User Pool
+#   COGNITO_DOMAIN         - e.g. id.alethiaintel.com
+#   COGNITO_USER_POOL_ID   - e.g. us-east-2_GCw1Yj6va
+#   COGNITO_REGION         - e.g. us-east-2
+#   COGNITO_REDIRECT_URI   - e.g. https://agents-studio.alethiaintel.com/auth/callback
+#   COGNITO_POST_LOGOUT_REDIRECT_URI - e.g. https://agents-studio.alethiaintel.com
+#   CUSTOM_LOGIN_URL       - https://login.alethiaintel.com/login
+#   AUTH_SERVICE_URL        - https://auth.alethiaintel.com/authservice/v1
+#   API_BASE_URL           - The backend API base URL (e.g. https://agents.alethiaintel.com/api/v1)

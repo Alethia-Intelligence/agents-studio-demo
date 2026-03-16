@@ -59,6 +59,29 @@ export interface AgentConfiguration {
   timeoutSeconds?: number;
 }
 
+// AI Proxy routing types
+export interface ConsideredModel {
+  modelId: string;
+  provider: string;
+  finalScore: number;
+  eligible: boolean;
+  reason: string;
+}
+
+export interface RoutingMetadata {
+  engine: string;
+  engineRequested: string;
+  strategy: string;
+  selectedModel: string;
+  selectedProvider: string;
+  selectionReason: string;
+  complexityScore: number;
+  durationMs: number;
+  consideredModels?: ConsideredModel[];
+  estimatedCostSavings: number;
+  fallbackUsed: boolean;
+}
+
 // Execution types
 export interface ExecuteRequest {
   query: string;
@@ -83,6 +106,11 @@ export interface ExecuteResponse {
   selectedProvider?: string;
   estimatedCost?: number;
   subtasks?: SubtaskResult[];
+  // AI Proxy fields
+  cacheHit?: boolean;
+  routing?: RoutingMetadata;
+  requestId?: string;
+  proxyDurationMs?: number;
   // Agentic fields
   steps?: AgentRunStep[];
   iterationCount?: number;

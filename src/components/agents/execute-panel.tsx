@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn, formatDuration, formatCost, formatNumber } from "@/lib/utils";
 import { listAgents, executeAgent } from "@/lib/api-client";
-import type { AgentInfo, ExecuteResponse, AgentRunStep } from "@/types/api";
+import type { AgentInfo, ExecuteResponse, AgentRunStep, ConsideredModel } from "@/types/api";
 
 type Mode = "standard" | "agentic";
 
@@ -87,6 +87,8 @@ export function ExecutePanel() {
   const [response, setResponse] = useState<ExecuteResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [stepsExpanded, setStepsExpanded] = useState(false);
+  const [routingExpanded, setRoutingExpanded] = useState(false);
+  const [modelsExpanded, setModelsExpanded] = useState(false);
 
   useEffect(() => {
     listAgents()
@@ -426,6 +428,176 @@ export function ExecutePanel() {
                     {response.steps.map((step) => (
                       <StepCard key={step.id} step={step} />
                     ))}
+                  </CardContent>
+                )}
+              </Card>
+            )}
+
+            {/* AI Proxy Routing */}
+            {response.routing && (
+              <Card>
+                <CardHeader className="p-4 pb-2">
+                  <button
+                    onClick={() => setRoutingExpanded((v) => !v)}
+                    className="flex items-center justify-between w-full text-left"
+                  >
+                    <CardTitle className="text-sm">
+                      AI Proxy Routing
+                    </CardTitle>
+                    {routingExpanded ? (
+                      <ChevronUp className="size-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="size-4 text-muted-foreground" />
+                    )}
+                  </button>
+                </CardHeader>
+
+                {routingExpanded && (
+                  <CardContent className="p-4 pt-0">
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Provider
+                        </dt>
+                        <dd className="font-mono text-xs text-foreground/90">
+                          {response.routing.selectedProvider}
+                        </dd>
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Strategy
+                        </dt>
+                        <dd className="font-mono text-xs text-foreground/90">
+                          {response.routing.strategy.replace(/_/g, " ")}
+                        </dd>
+                      </div>
+
+                      <div className="flex flex-col gap-0.5 col-span-2">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Selection Reason
+                        </dt>
+                        <dd className="text-xs text-foreground/80">
+                          {response.routing.selectionReason.replace(/_/g, " ")}
+                        </dd>
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          AI Proxy Complexity
+                        </dt>
+                        <dd className="font-semibold tabular-nums">
+                          {response.routing.complexityScore.toFixed(3)}
+                        </dd>
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Routing Time
+                        </dt>
+                        <dd className="font-semibold tabular-nums">
+                          {formatDuration(response.routing.durationMs)}
+                        </dd>
+                      </div>
+
+                      {response.proxyDurationMs != null && (
+                        <div className="flex flex-col gap-0.5">
+                          <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                            Proxy Duration
+                          </dt>
+                          <dd className="font-semibold tabular-nums">
+                            {formatDuration(response.proxyDurationMs)}
+                          </dd>
+                        </div>
+                      )}
+
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Cache Hit
+                        </dt>
+                        <dd>
+                          <Badge variant={response.cacheHit ? "success" : "outline"}>
+                            {response.cacheHit ? "Yes" : "No"}
+                          </Badge>
+                        </dd>
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Cost Savings
+                        </dt>
+                        <dd className="font-semibold tabular-nums">
+                          {formatCost(response.routing.estimatedCostSavings)}
+                        </dd>
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                          Fallback Used
+                        </dt>
+                        <dd>
+                          <Badge variant={response.routing.fallbackUsed ? "warning" : "outline"}>
+                            {response.routing.fallbackUsed ? "Yes" : "No"}
+                          </Badge>
+                        </dd>
+                      </div>
+
+                      {response.requestId && (
+                        <div className="flex flex-col gap-0.5 col-span-2">
+                          <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                            Request ID
+                          </dt>
+                          <dd className="font-mono text-xs text-foreground/90 truncate" title={response.requestId}>
+                            {response.requestId}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+
+                    {/* Considered Models */}
+                    {response.routing.consideredModels && response.routing.consideredModels.length > 0 && (
+                      <div className="mt-4">
+                        <button
+                          onClick={() => setModelsExpanded((v) => !v)}
+                          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {modelsExpanded ? (
+                            <ChevronUp className="size-3.5" />
+                          ) : (
+                            <ChevronDown className="size-3.5" />
+                          )}
+                          Considered Models ({response.routing.consideredModels.length})
+                        </button>
+
+                        {modelsExpanded && (
+                          <div className="mt-2 flex flex-col gap-1.5">
+                            {response.routing.consideredModels.map((model: ConsideredModel) => (
+                              <div
+                                key={`${model.provider}-${model.modelId}`}
+                                className="flex items-center justify-between gap-2 rounded-lg border border-input bg-background/50 px-3 py-2"
+                              >
+                                <div className="min-w-0">
+                                  <p className="font-mono text-xs text-foreground truncate">
+                                    {model.modelId}
+                                  </p>
+                                  <p className="text-[11px] text-muted-foreground">
+                                    {model.provider} &middot; {model.reason.replace(/_/g, " ")}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <span className="text-xs font-semibold tabular-nums">
+                                    {model.finalScore.toFixed(3)}
+                                  </span>
+                                  <Badge variant={model.eligible ? "success" : "outline"} className="text-[10px]">
+                                    {model.eligible ? "eligible" : "ineligible"}
+                                  </Badge>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </CardContent>
                 )}
               </Card>

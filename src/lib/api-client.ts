@@ -233,8 +233,8 @@ export async function deleteMCPConfig(id: string): Promise<void> {
 
 // MCP Runtime (server lifecycle)
 export async function listMCPServers(): Promise<MCPServerInfo[]> {
-  const data = await request<{ servers: MCPServerInfo[] }>("/mcp/servers");
-  return data.servers ?? [];
+  const data = await request<MCPServerInfo[] | { servers: MCPServerInfo[] }>("/mcp/servers");
+  return Array.isArray(data) ? data : data.servers ?? [];
 }
 
 export async function getMCPServer(serverId: string): Promise<MCPServerInfo> {
