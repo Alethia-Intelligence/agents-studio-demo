@@ -94,18 +94,21 @@ export interface ExecuteRequest {
 
 export interface ExecuteResponse {
   response: string;
-  executionPath: string;
-  complexityScore: number;
-  executionTime: number;
+  executionPath?: string;
+  complexityScore?: number;
+  executionTime?: number;
+  executionTimeMs?: number;
   tokensUsed: number;
   workflowId: string;
   runId: string;
-  selectedAgent: string;
-  autoRouted: boolean;
+  selectedAgent?: string;
+  autoRouted?: boolean;
   selectedModel?: string;
   selectedProvider?: string;
   estimatedCost?: number;
   subtasks?: SubtaskResult[];
+  namespace?: string;
+  taskQueue?: string;
   // AI Proxy fields
   cacheHit?: boolean;
   routing?: RoutingMetadata;

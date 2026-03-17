@@ -118,7 +118,7 @@ export function ExecutePanel() {
 
   const pathVariant =
     response
-      ? EXECUTION_PATH_VARIANT[response.executionPath?.toLowerCase()] ?? "blue"
+      ? EXECUTION_PATH_VARIANT[response.executionPath?.toLowerCase() ?? ""] ?? "blue"
       : "blue";
 
   return (
@@ -297,6 +297,7 @@ export function ExecutePanel() {
               </CardHeader>
               <CardContent className="p-4 pt-0">
                 <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                  {response.executionPath && (
                   <div className="flex flex-col gap-1 col-span-2">
                     <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
                       Execution Path
@@ -308,7 +309,9 @@ export function ExecutePanel() {
                       </Badge>
                     </dd>
                   </div>
+                  )}
 
+                  {response.complexityScore != null && (
                   <div className="flex flex-col gap-0.5">
                     <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
                       Complexity
@@ -317,13 +320,14 @@ export function ExecutePanel() {
                       {response.complexityScore.toFixed(1)}
                     </dd>
                   </div>
+                  )}
 
                   <div className="flex flex-col gap-0.5">
                     <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
                       Exec Time
                     </dt>
                     <dd className="font-semibold tabular-nums">
-                      {formatDuration(response.executionTime)}
+                      {formatDuration(response.executionTime ?? response.executionTimeMs ?? 0)}
                     </dd>
                   </div>
 
@@ -336,6 +340,7 @@ export function ExecutePanel() {
                     </dd>
                   </div>
 
+                  {response.autoRouted != null && (
                   <div className="flex flex-col gap-0.5">
                     <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
                       Auto-routed
@@ -346,7 +351,9 @@ export function ExecutePanel() {
                       </Badge>
                     </dd>
                   </div>
+                  )}
 
+                  {response.selectedAgent && (
                   <div className="flex flex-col gap-0.5 col-span-2">
                     <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">
                       Selected Agent
@@ -355,6 +362,7 @@ export function ExecutePanel() {
                       {response.selectedAgent}
                     </dd>
                   </div>
+                  )}
 
                   {response.selectedModel && (
                     <div className="flex flex-col gap-0.5 col-span-2">
